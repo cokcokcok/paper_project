@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
   	<link href="css/bootstrap.min.css" rel="stylesheet">
     
-	<title>Paper Project</title>
+	<title>sign up page</title>
   </head>
   <body style= "background-color:#afafaf; padding-top: 10%;">
 	<div class="container">
@@ -22,11 +22,8 @@
                     <div style="padding-top: 3%;">
                         <input id="user_pw" type="password" class="form-control" name="password" placeholder="Password">
                     </div>
-                    <div style="padding-top: 3%;">
-                        <button id="signin" class="form-control btn btn-primary">로그인</button>
-                    </div>
 					<div style="padding-top: 3%;">
-						<button id="signup" class="from-control btn btn-primary btn-block">회원가입</button>
+						<button id="send_info" class="from-control btn btn-primary btn-block">회원가입</button>
 					</div>
                 </form>
             </div>
@@ -35,37 +32,27 @@
 </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-	<script src="/socket.io/socket.io.js"></script>
-
+	<script src=/socket.io/socket.io.js"></script>
 	<script>
-	var socket = io();
-	
-	socket.on('check_signin', function(data) {
-		if (data == "success") {
-			location = "/main";
-		}
-		else {
-			alert(data);
-		}
-	});
-    $('#signin').click(e => {
-	  console.log("sdf");
-      e.preventDefault();
-      var $id = $("#user_id").val();
-	  var $pw = $("#user_pw").val();
+    // socket.io 서버에 접속한다
+		var socket = io();
+		
+		socket.on('check_signup', function(data) {
+			if (data == "success") {
+				location = "/main";
+			}
+		});
+		$('#send_info').click(e => {
+			e.preventDefault();
+//			location = "/main";
+			var $id = $("#user_id").val();
+			var $pw = $("#user_pw").val();
 
-      socket.emit("signin", {
-        id : $id,
-		pw : $pw
-      });
-    });
-
-	$('#signup').click(e => {
-	e.preventDefault();
-		socket.emit('disconect');
-		location = "/signup";
-	});
-	
-	</script>
+			socket.emit("signup", {
+				id: $id,
+				pw: $pw
+			})
+		})
+  </script>
   </body>
 </html>
