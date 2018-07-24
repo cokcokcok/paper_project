@@ -35,7 +35,7 @@ demo.type.prototype = {
     // club.anchor.set(0.5, 1);
     // club.animations.add('walk');
     // club.animations.play('walk', 5, true);
-    movement = false;
+    // movement = false;
 
   },
   update: function(){

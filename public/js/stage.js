@@ -2,7 +2,13 @@ demo.stage = function() {};
 
 demo.stage.prototype = {
   preload: function() {
-    for (var i = 1; i <= 6; i++) {
+	game.load.image('titleBk0', "images/all/plx-1.png");
+	game.load.image('titleBk1', "images/all/plx-2.png");
+	game.load.image('titleBk2', "images/all/plx-3.png");
+	game.load.image('titleBk3', "images/all/plx-4.png");
+	game.load.image('titleBk4', "images/all/plx-5.png");
+    
+	for (var i = 1; i <= 6; i++) {
       game.load.image('StageBtn' + i.toString(), "images/stage/stage-button-" + i.toString() + ".png");
     }
 
@@ -46,17 +52,28 @@ demo.stage.prototype = {
 function StageClick(btnId) {
   switch (btnId) {
     case 1:
+	  user.selectStage = btnId;
       game.state.start('Var_Const');
       break;
     case 2:
-
+	  user.selectStage = btnId;
+	  game.state.start('Type_System');
       break;
-
     case 3:
-
+	  user.selectStage = btnId;
+	  game.state.start('');
       break;
     case 4:
-
+	  user.selectStage = btnId;
+	  game.state.start('');
       break;
+	case 5:
+	  user.selectStage = btnId;
+	  game.state.start('');
+	  break;
+	case 6:
+	  game.state.start('');
+	  break;
   }
+  load.setInit();
 }

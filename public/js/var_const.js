@@ -1,6 +1,6 @@
   demo.var_const = function() {};
   var info;
-
+  var successCheck = false;
   demo.var_const.prototype = {
 
     preload: function() {
@@ -102,4 +102,9 @@
     for (var i = 0; i < 4; i++) {
       info[i].setText(value[i]);
     }
+	
+	alert("성공 했습니다.");
+	game.state.start('Stage');
+	user.selectStage = 0;
+	load.setInit();
   }

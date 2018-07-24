@@ -1,6 +1,7 @@
 var demo = {};
 var titleName;
 var titleCompile = false;
+var startBtn = false;
 demo.title = function() {};
 
 demo.title.prototype = {
@@ -39,7 +40,8 @@ demo.title.prototype = {
 };
 function StartClick() {
   if (titleCompile) {
-      game.state.start('Stage')
+      game.state.start('Stage');
+	  load.setInit();
   }else {
     alert('please compile');
   }
@@ -52,6 +54,8 @@ function EndClick() {
 function ChangeTitle(name) {
   if(!titleCompile) {
     titleCompile = true;
+	user.title = 1;
+	titleName.setText(name);
+	user.selectStage = 0;
   }
-  titleName.setText(name);
 }

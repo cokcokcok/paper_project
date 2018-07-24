@@ -1,0 +1,26 @@
+<h3>게임의 이름을 지어보자!</h3>
+<hr>
+
+<h4>C 언어 기본폼</h4>
+<div class="row" id="base_form" style="height:9vh;">#include &ltstdio.h&gt
+int main() {
+	// code
+	return 0;
+}</div>
+<script>
+	var base_form = ace.edit("base_form");
+	base_form.setTheme("ace/theme/xcode");
+	base_form.session.setMode("ace/mode/c_cpp");
+</script>
+<hr>
+
+<h4>printf?</h4>
+
+<ul>
+	<li>문자열을 cmd화면에 출력해주는 기능을 가지고 있다.</li>
+	<li>사용법
+		<ul>
+			<li>printf("hello everyone");
+		</ul>
+	</li>
+</ul>

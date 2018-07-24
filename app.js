@@ -1,5 +1,5 @@
 // create server
-const express =require('express');
+const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
 const router = require('./router/main')(app);
@@ -11,96 +11,171 @@ const port = 3000;
 // connect mysql
 var mysql = require('mysql');
 var db = mysql.createConnection({
-  host     : 'localhost',
-  user     : 'root',
-  password : 'paper_root',
-  database : 'paper'
+  host: 'localhost',
+  user: 'root',
+  password: 'paper_root',
+  database: 'paper'
 });
 
 // code compile
 const compiler = require('compilex');
-const option = {stats : true};
+const option = {
+  stats: true
+};
 compiler.init(option);
 
+// user data
+function UserData() {
+	this.name = "abc";
+	this.title = 0;
+	this.stageList = [];
+};
+
+UserData.prototype.setInit = function(name, title, stageList) {
+	this.name = name;
+	this.title = title;
+	this.stageList = stageList;
+};
+
+UserData.prototype.setName = function(name) {
+	this.name = name;
+};
+
+UserData.prototype.setStage = function(stageNo, val) {
+	this.stageList[stageNo] = val;
+};
+
+var user = new UserData();
+
+// file read write
+var fs = require('fs');
+
+// use static file
 app.use(express.static('public'));
 
+// set rendering engine
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
 
-io.on('connection', function (socket) {
+// socket io server connect
+io.on('connection', function(socket) {
   console.log("connect server");
+  // source code cmpile
   socket.on('compile', function(data) {
     var code = data.code;
     var envData = {
-		OS: "linux",
-		cmd: "gcc"};
+      OS: "linux",
+      cmd: "gcc"
+    };
 
+    // cpp file compile
     compiler.compileCPP(envData, code, function(result) {
       if (result.error) {
+        // send error message
         socket.emit('compile_error', result.error);
         console.log(result.error);
-	  }
-      else {
+      } else {
+        // send compile result
         socket.emit('compile_success', result.output);
-		console.log(result.output);
+        console.log(result.output);
       }
     });
   });
 
-  socket.on('signin', function(data) {
+  // join_main
+  socket.on('join_main', function(){
+	console.log("in join_main");
+	socket.emit('init_user', {
+		name : user.name,
+		title : user.title,
+		list : user.stageList
+	});
+  });
 
-	console.log("hi");
-	var id = data.id;
-	var pw = data.pw;
-	console.log(id);
-	console.log(pw);
-	var query = "SELECT * FROM user_info WHERE `user_id`=?";
-	var params = id;
+  socket.on('init_quest', function(data) {
+	var path = "./public/question/" + data + ".txt";
+	
+	var question = fs.readFileSync(path, 'utf-8');
+	socket.emit('get_quest', question);
+  });
 
-//	db.connect();
-
+  // user data update
+  socket.on('data_update', function(data) {
+	// db
+	var query = "UPDATE user_info SET title=?, stage1=?, stage2=?, stage3=?, stage4=?, stage5=?, stage6=? WHERE name=?";
+	var params = [data.title, data.list[0],data.list[1],data.list[2],data.list[3],data.list[4],data.list[5],data.name];
 	db.query(query, params, function(err, result, fields) {
 		if (err) {
 			console.log(err);
-			socket.emit('check_signin', "username does not exist");
 		}
-
 		else {
-			if(pw == result[0].user_pw) {
-				socket.emit('check_signin', "success");
-			}
-			else {
-				socket.emit('check_signin', "invalid password");
-			}
-//			console.log(result[0].user_pw);
+			console.log(result);
 		}
 	});
+  });
+  // login
+  socket.on('signin', function(data) {
 
-//	db.end();
+    var id = data.id;
+    var pw = data.pw;
+
+    // db
+    var query = "SELECT * FROM user_info WHERE `name`=?";
+    var params = id;
+
+    // login query
+    db.query(query, params, function(err, result, fields) {
+      if (err) {
+        console.log(err);
+        //send client
+        socket.emit('check_signin', {
+			msg : "username does not exist"
+
+		});
+      } else {
+        if (pw == result[0].user_pw) {
+		  var stageList = [result[0].stage1, result[0].stage2, result[0].stage3, result[0].stage4, result[0].stage5, result[0].stage6];
+		  user.setInit(id, result[0].title, stageList);
+          socket.emit('check_signin', {
+			msg : "success",
+		  });
+        } else {
+          socket.emit('check_signin', {
+			msg : "invalid password"
+		  });
+        }
+      }
+    });
+
   });
 
+  // sign up
   socket.on('signup', function(data) {
-	
-	var id = data.id;
-	var pw = data.pw;
-	
-	var query = "INSERT INTO user_info VALUES(?,?);";
-	var params = [id, pw];
-//	db.connect();
 
-	db.query(query, params, function(err, result, fields) {
-		if (!err) {
-			socket.emit('check_signup', "success");
-		}
-		else {
-			socket.emit('check_signup', "faile");
-			console.log("mysql error");
-			console.log(err);
-		}
-	});
+    var id = data.id;
+    var pw = data.pw;
 
-//	db.end();
+	if(!pw) {
+		return;
+	}
+
+    // db
+    var query = "INSERT INTO user_info VALUES(?,?,?,?,?,?,?,?,?);";
+    var params = [id, pw, 0, 0, 0, 0, 0, 0, 0];
+
+    // sign up query
+    db.query(query, params, function(err, result, fields) {
+      if (!err) {
+        // send success
+        socket.emit('check_signup', "success");
+      } else {
+        // send faile
+        socket.emit('check_signup', "fail");
+        console.log("mysql error");
+        console.log(err);
+      }
+    });
 
   });
 
@@ -114,5 +189,5 @@ io.on('connection', function (socket) {
 });
 
 server.listen(port, () => {
-  console.log(`Server is runnint at http://localhost:${port}`);
+  console.log(`Server is runnint at http://117.16.44.70:${port}`);
 });
