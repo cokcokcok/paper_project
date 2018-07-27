@@ -7,8 +7,8 @@ demo.condition.prototype = {
     game.load.image('titleBk2', "images/all/plx-3.png");
     game.load.image('titleBk3', "images/all/plx-4.png");
     game.load.image('titleBk4', "images/all/plx-5.png");
-    game.load.image('road', "images/play/road.png")
-    game.load.image('basecamp', "images/play/basecamp.png")
+    game.load.image('road', "images/play/road.png");
+    game.load.image('basecamp', "images/play/basecamp.png");
   },
   create: function() {
     for (var i = 0; i < 5; i++) {

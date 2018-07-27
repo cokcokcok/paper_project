@@ -1,6 +1,6 @@
 demo.type = function(){};
 
-var club;
+var club = new Array();
 var club_anim;
 var movement;
 var speed;
@@ -29,27 +29,14 @@ demo.type.prototype = {
     var basecamp = game.add.sprite(0, gameHeight - 32, 'basecamp');
     basecamp.anchor.set(0.48, 1);
 
-    // club = game.add.sprite(200, gameHeight - 25, 'unit_club_walk', 1);
-    // club.scale.set(1);
-    // club.smoothed = true;
-    // club.anchor.set(0.5, 1);
-    // club.animations.add('walk');
-    // club.animations.play('walk', 5, true);
-    // movement = false;
-
   },
   update: function(){
-    if (movement) {
-      club.x += speed;
-    }
-  }
 
 };
 
 function TypePlay(output) {
   var value = output.split(',');
 
-  club = new Array();
   club_anim = new Array();
 
 
@@ -66,9 +53,7 @@ function TypePlay(output) {
   }
 
   speed = parseFloat(value[2]);
-  // club.animations.add(value[1]);
-  // club.animations.play(value[1], 5, true);
-
+  movement = true;
 
 }
 function randomRange(n1, n2) {
