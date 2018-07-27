@@ -14,7 +14,12 @@
   <script src="js/stage.js"></script>
   <script src="js/var_const.js"></script>
   <script src="js/type_system.js"></script>
+  <script src="js/condition.js"></script>
+  <script src="js/loop.js"></script>
+  <script src="js/fun.js"></script>
+  <script src="js/arr.js"></script>
 
+  <!-- data of user -->
   <script src="js/userdata.js"></script>
 </head>
 
@@ -99,11 +104,6 @@
     socket.on("compile_success", function(data) {
 	  if(user.title == 0) {
 		ChangeTitle(data);
-		socket.emit('data_update',{
-			name : user.name,
-			title : user.title,
-			list : user.stageList
-		});
 	  }
 	  else {
 		switch(user.selectStage) {
@@ -127,6 +127,11 @@
 				break;
 		}
 	  }
+	  socket.emit('data_update', {
+			name : user.name,
+			title : user.title,
+			list : user.stageList
+		});
 	  editor.getSession().setValue("");
     });
 

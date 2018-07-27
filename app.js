@@ -92,16 +92,17 @@ io.on('connection', function(socket) {
 		list : user.stageList
 	});
   });
-
+  // quest data load
   socket.on('init_quest', function(data) {
 	var path = "./public/question/" + data + ".txt";
-	
+
 	var question = fs.readFileSync(path, 'utf-8');
 	socket.emit('get_quest', question);
   });
 
   // user data update
   socket.on('data_update', function(data) {
+	console.log(data.list);
 	// db
 	var query = "UPDATE user_info SET title=?, stage1=?, stage2=?, stage3=?, stage4=?, stage5=?, stage6=? WHERE name=?";
 	var params = [data.title, data.list[0],data.list[1],data.list[2],data.list[3],data.list[4],data.list[5],data.name];
@@ -120,6 +121,18 @@ io.on('connection', function(socket) {
     var id = data.id;
     var pw = data.pw;
 
+	if(!id) {
+		socket.emit('check_signin', {
+			msg : "empty id"
+		});
+		return;
+	}
+	if(!pw) {
+		socket.emit('check_signin', {
+			msg : "empty pw"
+		});
+		return;
+	}
     // db
     var query = "SELECT * FROM user_info WHERE `name`=?";
     var params = id;
@@ -156,7 +169,12 @@ io.on('connection', function(socket) {
     var id = data.id;
     var pw = data.pw;
 
+	if(!id) {
+		socket.emit('check_signup',"empyt id");
+		return;
+	}
 	if(!pw) {
+		socket.emit('check_signup', "empty pw");
 		return;
 	}
 

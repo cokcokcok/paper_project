@@ -1,0 +1,29 @@
+<h3>반복문을 활용하여 적 유닛 5마리씩 3초 간격으로 출현 하는 코드를 작성해 보자</h3>
+<hr>
+
+<h4>반복문이란?</h4>
+<ul>
+	<li>특정 조건에 한해서 어떠한 일을 반복 시키는 문법이다.</li>
+	<li>반복문에는 for문과 while문이 있다.</li>
+	<li>for문은 초기식, 조건식, 증감식이 묶여있는 문법이다.</li>
+	<li>for문의 형식은 아래와 같다.</li>
+<div class="row" id="base_from" style="height:20vh;">// for문
+for(int num = 0;	// 초기식 (반복을 위한 변수선언)
+	num < 3;		// 조건식 (반복의 범위를 지정)
+	num++)			// 증감식 (반복의 범위를 이탈하기 위한 증가 혹은 감소)
+{
+	// 반복이 되는 문장
+	printf("wa!");
+}
+
+// 한줄로 작성시
+// for(int num = 0; num < 3; num++) 
+</div>
+	<li>실행 결과 : wa!wa!wa!</li>
+</ul>
+
+<script>
+	var base_from = ace.edit("base_from");
+	base_from.setTheme("ace/theme/xcode");
+	base_from.session.setMode("ace/mode/c_cpp");
+</script>

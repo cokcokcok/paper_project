@@ -105,6 +105,7 @@
 	
 	alert("성공 했습니다.");
 	game.state.start('Stage');
+	user.stageList[0] = user.stageList[0] + 1;
 	user.selectStage = 0;
 	load.setInit();
   }

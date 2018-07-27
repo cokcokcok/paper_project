@@ -18,9 +18,16 @@ int main() {
 
 <ul>
 	<li>문자열을 cmd화면에 출력해주는 기능을 가지고 있다.</li>
-	<li>사용법
+	<li>문자열 이외의 데이터를 다양한 형태로 출력하는것도 가능하다.</li
+	<li>문자열 출력 방법
 		<ul>
 			<li>printf("hello everyone");
+			<li>실행 결과 : hello everyone
 		</ul>
 	</li>
+	<li>문자열 이외의 데이터 출력 방법</li>
+		<ul>
+			<li>printf("%d",1234);</li>
+			<li>실행 결과 : 1234</li>
+		</ul>
 </ul>

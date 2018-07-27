@@ -1,0 +1,30 @@
+<h3>배열을 활용하여 각 버튼의 유닛의 키워드 값을 저장 시켜보자</h3>
+<hr>
+
+<h4>배열이란?</h4>
+<ul>
+	<li>배열은 여러개의 변수가 하나의 이름과 일련번호를 사용한다</li>
+	<li>주의할점</li>
+	<ul>
+		<li>C언어에서의 배열의 첫번째 번호는 0부터 시작이다</li>
+		<li>코드를 이용해서 메모리를 데이터 갯수를 기준으로 확보하는 경우 프로그램을 실행할 때 그 크기가 변하지 않는다.</li>
+		<li>int arr[] = {};는 사용 할 수없는 코드이다.</li>
+	</ul>
+	<li>배열의 초기화 방법은 아래와 같다</li>
+<div class="row" id="base_from" style="height:20vh">// 배열의 크기를명시하여 초기화 하는법
+int arr1[4] = {1, 2, 3, 4};
+
+// 배열의 크기를 명시하지 않고 초기화 하는법
+int arr2[] = {5, 6, 7, 8};
+
+// 배열의 일부만 초기화 하는법
+int arr3[5] = {9, 10, 11};</div>
+	<li>배열을 일부만 초기화 할 경우 나머지 값은 자동으로 0으로 초기화 된다.</li>
+</ul>
+
+<script>
+var base_from = ace.edit("base_from");
+base_from.setTheme("ace/theme/xcdoe");
+base_from.session.setMode("ace/mode/c_cpp");
+</script>
+

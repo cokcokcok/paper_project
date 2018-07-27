@@ -54,7 +54,7 @@ function EndClick() {
 function ChangeTitle(name) {
   if(!titleCompile) {
     titleCompile = true;
-	user.title = 1;
+	user.title = user.title + 1;
 	titleName.setText(name);
 	user.selectStage = 0;
   }

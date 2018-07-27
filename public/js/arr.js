@@ -1,6 +1,6 @@
-demo.condition = function() {};
+demo.arr = function() {};
 
-demo.condition.prototype = {
+demo.arr.prototype = {
   preload: function() {
     game.load.image('titleBk0', "images/all/plx-1.png");
     game.load.image('titleBk1', "images/all/plx-2.png");

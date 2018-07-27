@@ -1,0 +1,47 @@
+<h3>나무의 체력이 0이 될경우 "end"를 출력하는 코드를 작성하시오</h3>
+<hr>
+
+<h4>조건문이란?</h4>
+<ul>
+	<li>조건문은 '()'안의 값이 참이라면 실행되는 문법이다.</li>
+	<li>조건문은 if문과 switch case문이 있다.
+	<li>if는 독립적으로 사용되어 조건적 실행을 가능하게한다.</li>
+	<li>문법의 구성은 아래와 같다.</li>
+<div class="row" id="base_from" style="height:30vh;">// if문
+if(num1 > num2) 
+//num1이 num2보다 크면 아래의 중괄호를 실행한다.
+{
+	printf("num1이 num2보다 큽니다.");
+}
+
+// if ~ else문의 구성
+if(num > num2)
+{
+	printf("num1이 num2보다 큽니다.");
+}
+else 
+{
+	printf("num1이 num2보다 작습니다.");
+}
+
+// if ~ else if ~ else 문의 구성
+if(num > num2)
+{
+	printf("num1이 num2보다 큽니다.");
+}
+else if(num1 == num2)
+{
+	printf("num1과 num2는 같습니다.");
+}
+else
+{
+	printf("num1이 num2보다 작습니다.");
+}
+</div>
+</ul>
+
+<script>
+	var base_form = ace.edit("base_from");
+	base_form.setTheme("ace/theme/xcode");
+	base_form.session.setMode("ace/mode/c_cpp");
+</script>
