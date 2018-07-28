@@ -1,5 +1,8 @@
 demo.condition = function() {};
 
+var enemy;
+var movement = false;
+
 demo.condition.prototype = {
   preload: function() {
     game.load.image('titleBk0', "images/all/plx-1.png");
@@ -9,6 +12,7 @@ demo.condition.prototype = {
     game.load.image('titleBk4', "images/all/plx-5.png");
     game.load.image('road', "images/play/road.png");
     game.load.image('basecamp', "images/play/basecamp.png");
+	game.load.image('enemy_club', "images/play/enemu_club_sprite.png", 90, 90, 9);
   },
   create: function() {
     for (var i = 0; i < 5; i++) {
@@ -26,7 +30,25 @@ demo.condition.prototype = {
 
   },
   update: function() {
-
+	if(movement) {
+		enemy.x -= 1.1;
+	}
   }
 
 };
+
+function isPlayCondition(output) {
+	var value = ouput;
+	
+	if (value != "end") {
+		return;
+	}
+	enemy = game.add.sprite(gameWidth - 100, gameHeight - 25, 'enemy_club', 1);
+	enemy.scale.set(1);
+	enemy.anchor.set(0, 1);
+	
+	var enemy_walk = enemy.animations.add('walk', [0,1,2,3]);
+	enemy_walk.play(5, true);
+	movement = true;
+	
+}

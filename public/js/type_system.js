@@ -13,7 +13,7 @@ demo.type.prototype = {
     game.load.image('titleBk4', "images/all/plx-5.png");
     game.load.image('road', "images/play/road.png")
     game.load.image('basecamp', "images/play/basecamp.png")
-    game.load.spritesheet('unit_club_walk', "images/play/unit_club_walk.png", 87, 90, 4);
+    game.load.spritesheet('unit_club_walk', "images/play/unit_club_sprite.png", 90, 90, 9);
   },
   create: function(){
     for(var i = 0; i < 5; i++) {
@@ -31,7 +31,12 @@ demo.type.prototype = {
 
   },
   update: function(){
-
+	if(movement) {
+		for (var i = 0; i < 5; i++) {
+			club[i].x += speed;
+		}
+	}  
+  }
 };
 
 function TypePlay(output) {
@@ -39,6 +44,10 @@ function TypePlay(output) {
 
   club_anim = new Array();
 
+  if (!isCheckResult(value)) {
+	alert("modify code please");
+	return;
+  }
 
   var len = Number(value[0]);
 
@@ -48,7 +57,7 @@ function TypePlay(output) {
     club[i].scale.set(1);
     club[i].anchor.set(0, 1);
     club[i].smoothed = false;
-    club_anim[i] = club[i].animations.add(value[1]);
+    club_anim[i] = club[i].animations.add(value[1],[0,1,2,3]);
     club_anim[i].play(5, true);
   }
 
@@ -58,4 +67,13 @@ function TypePlay(output) {
 }
 function randomRange(n1, n2) {
   return Math.floor( (Math.random() * (n2 - n1 + 1)) + n1 );
+}
+
+function isCheckResult(arr) {
+	if (arr[0] != "5" || arr[1] != "w" || arr[2] != "2.5") {
+		return false;
+	}
+	else {
+		return true;
+	}
 }
