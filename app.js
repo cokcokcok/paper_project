@@ -26,23 +26,23 @@ compiler.init(option);
 
 // user data
 function UserData() {
-	this.name = "abc";
-	this.title = 0;
-	this.stageList = [];
+  this.name = "abc";
+  this.title = 0;
+  this.stageList = [];
 };
 
 UserData.prototype.setInit = function(name, title, stageList) {
-	this.name = name;
-	this.title = title;
-	this.stageList = stageList;
+  this.name = name;
+  this.title = title;
+  this.stageList = stageList;
 };
 
 UserData.prototype.setName = function(name) {
-	this.name = name;
+  this.name = name;
 };
 
 UserData.prototype.setStage = function(stageNo, val) {
-	this.stageList[stageNo] = val;
+  this.stageList[stageNo] = val;
 };
 
 var user = new UserData();
@@ -84,36 +84,35 @@ io.on('connection', function(socket) {
   });
 
   // join_main
-  socket.on('join_main', function(){
-	console.log("in join_main");
-	socket.emit('init_user', {
-		name : user.name,
-		title : user.title,
-		list : user.stageList
-	});
+  socket.on('join_main', function() {
+    console.log("in join_main");
+    socket.emit('init_user', {
+      name: user.name,
+      title: user.title,
+      list: user.stageList
+    });
   });
   // quest data load
   socket.on('init_quest', function(data) {
-	var path = "./public/question/" + data + ".txt";
+    var path = "./public/question/" + data + ".txt";
 
-	var question = fs.readFileSync(path, 'utf-8');
-	socket.emit('get_quest', question);
+    var question = fs.readFileSync(path, 'utf-8');
+    socket.emit('get_quest', question);
   });
 
   // user data update
   socket.on('data_update', function(data) {
-	console.log(data.list);
-	// db
-	var query = "UPDATE user_info SET title=?, stage1=?, stage2=?, stage3=?, stage4=?, stage5=?, stage6=? WHERE name=?";
-	var params = [data.title, data.list[0],data.list[1],data.list[2],data.list[3],data.list[4],data.list[5],data.name];
-	db.query(query, params, function(err, result, fields) {
-		if (err) {
-			console.log(err);
-		}
-		else {
-			console.log(result);
-		}
-	});
+    console.log(data.list);
+    // db
+    var query = "UPDATE user_info SET title=?, stage1=?, stage2=?, stage3=?, stage4=?, stage5=?, stage6=? WHERE name=?";
+    var params = [data.title, data.list[0], data.list[1], data.list[2], data.list[3], data.list[4], data.list[5], data.name];
+    db.query(query, params, function(err, result, fields) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(result);
+      }
+    });
   });
   // login
   socket.on('signin', function(data) {
@@ -121,18 +120,18 @@ io.on('connection', function(socket) {
     var id = data.id;
     var pw = data.pw;
 
-	if(!id) {
-		socket.emit('check_signin', {
-			msg : "empty id"
-		});
-		return;
-	}
-	if(!pw) {
-		socket.emit('check_signin', {
-			msg : "empty pw"
-		});
-		return;
-	}
+    if (!id) {
+      socket.emit('check_signin', {
+        msg: "empty id"
+      });
+      return;
+    }
+    if (!pw) {
+      socket.emit('check_signin', {
+        msg: "empty pw"
+      });
+      return;
+    }
     // db
     var query = "SELECT * FROM user_info WHERE `name`=?";
     var params = id;
@@ -143,20 +142,20 @@ io.on('connection', function(socket) {
         console.log(err);
         //send client
         socket.emit('check_signin', {
-			msg : "username does not exist"
+          msg: "username does not exist"
 
-		});
+        });
       } else {
         if (pw == result[0].user_pw) {
-		  var stageList = [result[0].stage1, result[0].stage2, result[0].stage3, result[0].stage4, result[0].stage5, result[0].stage6];
-		  user.setInit(id, result[0].title, stageList);
+          var stageList = [result[0].stage1, result[0].stage2, result[0].stage3, result[0].stage4, result[0].stage5, result[0].stage6];
+          user.setInit(id, result[0].title, stageList);
           socket.emit('check_signin', {
-			msg : "success",
-		  });
+            msg: "success",
+          });
         } else {
           socket.emit('check_signin', {
-			msg : "invalid password"
-		  });
+            msg: "invalid password"
+          });
         }
       }
     });
@@ -169,14 +168,14 @@ io.on('connection', function(socket) {
     var id = data.id;
     var pw = data.pw;
 
-	if(!id) {
-		socket.emit('check_signup',"empyt id");
-		return;
-	}
-	if(!pw) {
-		socket.emit('check_signup', "empty pw");
-		return;
-	}
+    if (!id) {
+      socket.emit('check_signup', "empyt id");
+      return;
+    }
+    if (!pw) {
+      socket.emit('check_signup', "empty pw");
+      return;
+    }
 
     // db
     var query = "INSERT INTO user_info VALUES(?,?,?,?,?,?,?,?,?);";
