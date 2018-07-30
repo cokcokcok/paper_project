@@ -17,7 +17,6 @@ demo.stage.prototype = {
     for (var i = 0; i < 5; i++) {
       game.add.sprite(0, 0, 'titleBk' + i.toString());
     }
-
     var stageBtn = new Array();
 
     stageBtn[0] = game.add.button(180, 150, 'StageBtn1', function() {
@@ -65,10 +64,10 @@ function StageClick(btnId) {
 	  game.state.start('Loop');
       break;
 	case 5:
-	  game.state.start('Arr');
+	  game.state.start('Fun');
 	  break;
 	case 6:
-	  game.state.start('Fun');
+	  game.state.start('Arr');
 	  break;
   }
   load.setInit();
