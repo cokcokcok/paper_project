@@ -10,6 +10,7 @@
       game.load.image('titleBk3', "images/all/plx-4.png");
       game.load.image('titleBk4', "images/all/plx-5.png");
       game.load.image('unit_club', "images/play/unit_club.png");
+      game.load.image('successBtn', "images/all/successBtn.png");
     },
     create: function() {
       for (var i = 0; i < 5; i++) {
@@ -38,24 +39,24 @@
 
       var lvText = game.add.text(unit_club_info_name[0].position.x + 50,
         unit_club_info_name[0].position.y + 37.5, "레   벨", {
-        font: "bold 20px Arial",
-        fill: "#000000"
-      });
+          font: "bold 20px Arial",
+          fill: "#000000"
+        });
       var hpText = game.add.text(unit_club_info_name[1].position.x + 50,
         unit_club_info_name[1].position.y + 37.5, "체   력", {
-        font: "bold 20px Arial",
-        fill: "#000000"
-      });
+          font: "bold 20px Arial",
+          fill: "#000000"
+        });
       var attackText = game.add.text(unit_club_info_name[2].position.x + 50,
         unit_club_info_name[2].position.y + 37.5, "공 격 력", {
-        font: "bold 20px Arial",
-        fill: "#000000"
-      });
+          font: "bold 20px Arial",
+          fill: "#000000"
+        });
       var defensiveText = game.add.text(unit_club_info_name[3].position.x + 50,
         unit_club_info_name[3].position.y + 37.5, "방 어 력", {
-        font: "bold 20px Arial",
-        fill: "#000000"
-      });
+          font: "bold 20px Arial",
+          fill: "#000000"
+        });
 
       lvText.anchor.set(0.5, 0.5);
       hpText.anchor.set(0.5, 0.5);
@@ -66,27 +67,27 @@
 
       info[0] = game.add.text(unit_club_info[0].position.x + 75,
         unit_club_info[0].position.y + 37.5, "1", {
-        font: "bold 20px Arial",
-        fill: "#000000"
-      });
+          font: "bold 20px Arial",
+          fill: "#000000"
+        });
 
       info[1] = game.add.text(unit_club_info[1].position.x + 75,
         unit_club_info[1].position.y + 37.5, "100", {
-        font: "bold 20px Arial",
-        fill: "#000000"
-      });
+          font: "bold 20px Arial",
+          fill: "#000000"
+        });
 
       info[2] = game.add.text(unit_club_info[2].position.x + 75,
         unit_club_info[2].position.y + 37.5, "8", {
-        font: "bold 20px Arial",
-        fill: "#000000"
-      });
+          font: "bold 20px Arial",
+          fill: "#000000"
+        });
 
       info[3] = game.add.text(unit_club_info[3].position.x + 75,
         unit_club_info[3].position.y + 37.5, "2", {
-        font: "bold 20px Arial",
-        fill: "#000000"
-      });
+          font: "bold 20px Arial",
+          fill: "#000000"
+        });
 
       for (var i = 0; i < 4; i++) {
         info[i].anchor.set(0.5, 0.5);
@@ -102,10 +103,23 @@
     for (var i = 0; i < 4; i++) {
       info[i].setText(value[i]);
     }
-	
-	alert("성공 했습니다.");
-	game.state.start('Stage');
-	user.stageList[0] = user.stageList[0] + 1;
-	user.selectStage = 0;
-	load.setInit();
+
+    var resultMsg = game.add.text(game.world.centerX, 150, "success", {
+      font: "bold 40px Arial",
+      fill: "#ffffff"
+    });
+
+    resultMsg.anchor.set(0.5, 0.5);
+
+    var successBtn = game.add.button(game.world.centerX, game.world.centerY + 50, 'successBtn', onClickSuccess_var, this, 2, 1, 0);
+
+    successBtn.anchor.set(0.5,0.5);
+  }
+
+  function onClickSuccess_var() {
+    user.stageList[0] = user.stageList[0] + 1;
+    user.selectStage = 0;
+    load.updateData();
+    load.setInit();
+    game.state.start('Stage');
   }

@@ -16,7 +16,7 @@ demo.title.prototype = {
   },
   create: function() {
     var titleBk = new Array();
-    for(var i = 0; i < 5; i++) {
+    for (var i = 0; i < 5; i++) {
       titleBk[i] = game.add.sprite(0, 0, 'titleBk' + i.toString());
 
     }
@@ -38,24 +38,26 @@ demo.title.prototype = {
 
   }
 };
+
 function StartClick() {
   if (titleCompile) {
-      game.state.start('Stage');
-	  load.setInit();
-  }else {
+    game.state.start('Stage');
+    load.setInit();
+  } else {
     alert('please compile');
   }
 
 }
+
 function EndClick() {
   // end button input code
 }
 
 function ChangeTitle(name) {
-  if(!titleCompile) {
+  if (!titleCompile) {
     titleCompile = true;
-	user.title = user.title + 1;
-	titleName.setText(name);
-	user.selectStage = 0;
+    user.title = user.title + 1;
+    titleName.setText(name);
+    user.selectStage = 0;
   }
 }

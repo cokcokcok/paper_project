@@ -1,9 +1,9 @@
 demo.condition = function() {};
 
 var enemy;
-var movement = false;
+var movementEnemy = false;
 var attack = false;
-var tree_hp = 100;
+var tree_hp = 30;
 var frame = 0;
 
 demo.condition.prototype = {
@@ -15,6 +15,7 @@ demo.condition.prototype = {
     game.load.image('titleBk4', "images/all/plx-5.png");
     game.load.image('road', "images/play/road.png");
     game.load.image('basecamp', "images/play/basecamp.png");
+    game.load.image('successBtn', "images/all/successBtn.png");
     game.load.spritesheet('enemy_club', "images/play/enemy_club_sprite.png", 81, 90, 9);
   },
   create: function() {
@@ -36,13 +37,13 @@ demo.condition.prototype = {
   },
   update: function() {
     if (tree_hp > 0) {
-      if (movement) {
-        enemy.x -= 1.1;
+      if (movementEnemy) {
+        enemy.x -= 2.1;
 
         if (enemy.x < 5) {
           enemy.animations.add('attack', [4, 5, 6, 7, 8]);
           enemy.animations.play('attack', 5, true);
-          movement = false;
+          movementEnemy = false;
           attack = true
         }
       }
@@ -58,12 +59,11 @@ demo.condition.prototype = {
       if (frame > 11) {
         tree_hp -= 10;
 
-        if (tree_hp < 0) {
-          // enemy.animations.stop(null, true);
+        if (tree_hp <= 0) {
+          enemy.animations.stop(null, true);
           setResultMsg("end");
         }
       }
-      console.log(tree_hp);
     }
 
   }
@@ -82,15 +82,30 @@ function isPlayCondition(output) {
   enemy.animations.add('walk', [0, 1, 2, 3]);
   enemy.animations.play('walk', 5, true);
 
-  movement = true;
+  movementEnemy = true;
 
 }
 
 function setResultMsg(msg) {
+
   var resultMsg = game.add.text(game.world.centerX, 150, msg, {
     font: "bold 40px Arial",
     fill: "#ffffff"
   });
 
   resultMsg.anchor.set(0.5, 0.5);
+
+  var successBtn = game.add.button(game.world.centerX, game.world.centerY + 50, 'successBtn', onClickSuccess, this, 2, 1, 0);
+
+  successBtn.anchor.set(0.5, 0.5);
+
+
+}
+
+function onClickSuccess() {
+  user.selectStage = 0;
+  user.stageList[2] += 1;
+  load.updateData();
+  load.setInit();
+  game.state.start('Stage');
 }

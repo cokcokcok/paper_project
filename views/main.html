@@ -77,12 +77,12 @@
       <!-- line & copyright -->
       <hr class="row">
       <div class="row">
-				<footer>
-					<p>&copy; SMU2018</p>
-				</footer>
-			</div>
-		</div>
-	</div>
+        <footer>
+          <p>&copy; SMU2018</p>
+        </footer>
+      </div>
+    </div>
+  </div>
 
   <script src="http://code.jquery.com/jquery.js"></script>
   <script src="js/bootstrap.min.js "></script>
@@ -91,48 +91,42 @@
   <script>
     var socket = io();
 
-	socket.emit('join_main');
+    socket.emit('join_main');
 
-	socket.on('init_user', function(data) {
-		user.name = data.name;
-		user.title = data.title;
-		user.stageList = data.list;
-		setMode();
-		load.setInit();
-	});
+    socket.on('init_user', function(data) {
+      user.name = data.name;
+      user.title = data.title;
+      user.stageList = data.list;
+      setMode();
+      load.setInit();
+    });
 
     socket.on("compile_success", function(data) {
-	  if(user.title == 0) {
-		ChangeTitle(data);
-	  }
-	  else {
-		switch(user.selectStage) {
-			case 1 :
-				ChangeInfo(data);
-				break;
-			case 2 :
-				TypePlay(data);
-				break;
-			case 3 :
-				isPlayCondition(data);
-				break;
-			case 4 :
+      if (user.title == 0) {
+        ChangeTitle(data);
+      } else {
+        switch (user.selectStage) {
+          case 1:
+            ChangeInfo(data);
+            break;
+          case 2:
+            TypePlay(data);
+            break;
+          case 3:
+            isPlayCondition(data);
+            break;
+          case 4:
 
-				break;
-			case 5 :
+            break;
+          case 5:
 
-				break;
-			case 6 :
+            break;
+          case 6:
 
-				break;
-		}
-	  }
-	  socket.emit('data_update', {
-			name : user.name,
-			title : user.title,
-			list : user.stageList
-		});
-	  editor.getSession().setValue("");
+            break;
+        }
+      }
+      editor.getSession().setValue("");
     });
 
     socket.on("compile_error", function(data) {
@@ -148,44 +142,53 @@
       });
     });
 
-	$("#hint_btn").click(e => {
-	  e.preventDefault();
-	  // hint button click
-	});
+    function Load() {}
 
-	function Load(){}
+    Load.prototype.setInit = function() {
+      $("#quest_content").empty();
+      var sendMsg = '';
+      if (user.title == 0) {
+        sendMsg = 'title';
+      } else {
+        switch (user.selectStage) {
+          case 0:
+            sendMsg = 'stage';
+            break;
+          case 1:
+            sendMsg = 'var_const';
+            break;
+          case 2:
+            sendMsg = 'type_system';
+            break;
+          case 3:
+            sendMsg = 'if';
+            break;
+          case 4:
+            sendMsg = 'loop';
+            break;
+          case 5:
+            sendMsg = 'function';
+            break;
+          case 6:
+            sendMsg = 'array';
+            break;
+        }
+      }
+      socket.emit('init_quest', sendMsg);
+    }
+    socket.on("get_quest", function(data) {
+      $("#quest_content").append(data);
+    });
 
-	Load.prototype.setInit = function() {
-		$("#quest_content").empty();
-		var sendMsg = '';
-		if(user.title == 0) {
-			sendMsg = 'title';
-		}
-		else {
-			switch(user.selectStage) {
-				case 0 : sendMsg = 'stage';
-					break;
-				case 1 : sendMsg = 'var_const';
-					break;
-				case 2 : sendMsg = 'type_system';
-					break;
-				case 3 : sendMsg = 'if';
-					break;
-				case 4 : sendMsg = 'loop';
-					break;
-				case 5 : sendMsg = 'function';
-					break;
-				case 6 : sendMsg = 'array';
-					break;
-			}
-		}
-		socket.emit('init_quest', sendMsg);
-	}
-	socket.on("get_quest", function(data) {
-		$("#quest_content").append(data);
-	});
+    Load.prototype.updateData = function() {
+      socket.emit('data_update', {
+        name: user.name,
+        title: user.title,
+        list: user.stageList
+      });
+    }
 
-	var load = new Load();
+    var load = new Load();
   </script>
 </body>
 
