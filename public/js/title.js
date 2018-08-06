@@ -41,8 +41,9 @@ demo.title.prototype = {
 
 function StartClick() {
   if (titleCompile) {
-    game.state.start('Stage');
+	load.updateData();
     load.setInit();
+	game.state.start('Stage');
   } else {
     alert('please compile');
   }

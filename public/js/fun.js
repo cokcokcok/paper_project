@@ -79,9 +79,28 @@ demo.fun.prototype = {
 };
 
 function funCompile(data) {
+  var value = data.split(",");
+
+  if(!isSuccessCheck_fun(value)) {
+	return;
+  }
   funEnemy.animations.play('walk', 5, true);
   funUnit.animations.play('walk', 5, true);
   funCompileCheck = true;
+}
+
+function isSuccessCheck_fun(data) {
+  if (data[0] == "attack" || data[5] == "attack") {
+	if (data[0] == "unit" || data[1] == "unit") {
+		return true;
+	}
+	else {
+		return false;
+	}
+  }
+  else {
+	return false;
+  }
 }
 
 function setResultMsg_fun() {
@@ -104,6 +123,7 @@ function onClickSuccessFun() {
   user.selectStage = 0;
   user.stageList[4] += 1;
   load.updateData();
+  load.updateErr();
   load.setInit();
   game.state.start('Stage');
 }

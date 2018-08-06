@@ -76,7 +76,7 @@ function randomRange(n1, n2) {
 }
 
 function isCheckResult(arr) {
-  if (arr[0] != "5" || arr[1] != "w" || arr[2] != "2.5") {
+  if (arr[0] != "5" || arr[1] != "w" || arr[2] != "1.2") {
     return false;
   } else {
     return true;
@@ -101,6 +101,7 @@ function onClickSuccess_type() {
   user.stageList[1] += 1;
   user.selectStage = 0;
   load.updateData();
+  load.updateErr();
   load.setInit();
   game.state.start('Stage');
 }

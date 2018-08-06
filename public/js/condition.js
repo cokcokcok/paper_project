@@ -3,7 +3,8 @@ demo.condition = function() {};
 var enemy;
 var movementEnemy = false;
 var attack = false;
-var tree_hp = 30;
+var tree_hp = 40;
+var tree;
 var frame = 0;
 
 demo.condition.prototype = {
@@ -32,7 +33,12 @@ demo.condition.prototype = {
     var basecamp = game.add.sprite(0, gameHeight - 32, 'basecamp');
     basecamp.anchor.set(0.48, 1);
 
-
+	tree = game.add.text(80, gameHeight - (gameHeight * 0.7), "hp: " + String(tree_hp), {
+		font: "bold 20px Arial",
+		fill: "#ff0000"
+	});
+	
+	tree.anchor.set(0, 1);
 
   },
   update: function() {
@@ -57,8 +63,8 @@ demo.condition.prototype = {
       }
 
       if (frame > 11) {
-        tree_hp -= 10;
-
+        tree_hp -= 5;
+		tree.setText("hp: " + String(tree_hp));
         if (tree_hp <= 0) {
           enemy.animations.stop(null, true);
           setResultMsg("end");
@@ -106,6 +112,7 @@ function onClickSuccess() {
   user.selectStage = 0;
   user.stageList[2] += 1;
   load.updateData();
+  load.updateErr();
   load.setInit();
   game.state.start('Stage');
 }

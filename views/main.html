@@ -55,11 +55,11 @@
       <!-- code and hint view -->
       <div class="row">
         <!-- code view -->
-        <div class="col-sm-12 col-md-6" style=" border-style:solid; border-width:1px">
-          <div class="row" style="background:#9f9f9f; padding:1%;">
+        <div class="col-sm-12 col-md-6" style="height:400px; border-style:solid; border-width:1px">
+          <div class="row" style="background:#9f9f9f; padding:1%; height:45px;">
             <button id="send_code" class="btn btn-success">실 행</button>
           </div>
-          <div class="row" id="editor" style="height:35vh;"></div>
+          <div class="row" id="editor" style="height:355px;"></div>
           <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js"></script>
           <script>
             var editor = ace.edit("editor");
@@ -68,10 +68,11 @@
           </script>
         </div>
         <!-- hint view -->
-        <div class="col-sm-12 col-md-6" style="height:40vh; border-style:solid; border-width:1px;">
+        <div class="col-sm-12 col-md-6" style="height:400px; border-style:solid; border-width:1px;">
           <div class="row" style="height:45px; background:#9f9f9f; padding:1%;">
             <big style="font-size:13pt; color:white;">힌 트</big>
           </div>
+		  <div id="hint_content" style="overflow-y:auto; overflow-x:hidden; height:355px;"></div>
         </div>
       </div>
       <!-- line & copyright -->
@@ -97,6 +98,7 @@
       user.name = data.name;
       user.title = data.title;
       user.stageList = data.list;
+	  user.typingErr = data.typingList;
       setMode();
       load.setInit();
     });
@@ -126,7 +128,7 @@
             break;
         }
       }
-      editor.getSession().setValue("");
+      //editor.getSession().setValue("#include");
     });
 
     socket.on("compile_error", function(data) {
@@ -141,11 +143,18 @@
         code: $code
       });
     });
+	
+	$(".ace_text-input").on('keydown', function(event) {
+		if(event.keyCode == 46 || event.keyCode == 8) {
+			user.typingErr[user.selectStage - 1] += 1;
+		}
+	});
 
     function Load() {}
 
     Load.prototype.setInit = function() {
       $("#quest_content").empty();
+	  $("#hint_content").empty();
       var sendMsg = '';
       if (user.title == 0) {
         sendMsg = 'title';
@@ -175,10 +184,19 @@
         }
       }
       socket.emit('init_quest', sendMsg);
+	  socket.emit('init_code', sendMsg);
+	  socket.emit('init_hint', sendMsg);
+	  socket.emit('update_selectStage', user.selectStage);
     }
     socket.on("get_quest", function(data) {
       $("#quest_content").append(data);
     });
+	socket.on("get_hint", function(data) {
+	  $("#hint_content").append(data);
+	});
+	socket.on("get_code", function(data) {
+	  editor.getSession().setValue(data);
+	});
 
     Load.prototype.updateData = function() {
       socket.emit('data_update', {
@@ -186,7 +204,14 @@
         title: user.title,
         list: user.stageList
       });
-    }
+    };
+	
+	Load.prototype.updateErr = function() {
+	  socket.emit('err_update', {
+		name: user.name,
+		list: user.typingErr
+	  });
+	};
 
     var load = new Load();
   </script>

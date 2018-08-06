@@ -8,6 +8,9 @@ const io = require('socket.io')(server);
 // connect address
 const port = 3000;
 
+// Prevent duplication
+const cuid = require('cuid');
+
 // connect mysql
 var mysql = require('mysql');
 var db = mysql.createConnection({
@@ -24,10 +27,15 @@ const option = {
 };
 compiler.init(option);
 
+// wirte time
+var startTime;
+var endTime;
 // user data
 function UserData() {
   this.name = "abc";
   this.title = 0;
+  this.selectStage = 0;
+  this.typingErr = [];
   this.stageList = [];
 };
 
@@ -43,6 +51,10 @@ UserData.prototype.setName = function(name) {
 
 UserData.prototype.setStage = function(stageNo, val) {
   this.stageList[stageNo] = val;
+};
+
+UserData.prototype.setTypingErr = function(typingErr) {
+	this.typingErr = typingErr;
 };
 
 var user = new UserData();
@@ -63,14 +75,31 @@ io.on('connection', function(socket) {
   console.log("connect server");
   // source code cmpile
   socket.on('compile', function(data) {
+	// end time
+	endTime = new Date().getTime();
+	
+	var writeTime = endTime - startTime;
     var code = data.code;
     var envData = {
       OS: "linux",
       cmd: "gcc"
     };
+	var fileName = user.name + "_" +  String(user.selectStage) + "_" + cuid.slug();
+    
+	var query = "INSERT INTO write_time VALUES(?,?,?);";
+	var params = [user.name, fileName, writeTime];
+	
+	db.query(query, params, function(err, result, fields) {
+		if(err) {
+			console.log(err);
+		}
+		else {
+			console.log(result);
+		}
+	});
 
-    // cpp file compile
-    compiler.compileCPP(envData, code, function(result) {
+	// cpp file compile
+    compiler.compileCPP(envData, code, fileName,  function(result) {
       if (result.error) {
         // send error message
         socket.emit('compile_error', result.error);
@@ -83,21 +112,51 @@ io.on('connection', function(socket) {
     });
   });
 
+  socket.on('update_selectStage', function(data) {
+	user.selectStage = data;
+  });
+
   // join_main
   socket.on('join_main', function() {
     console.log("in join_main");
     socket.emit('init_user', {
       name: user.name,
       title: user.title,
-      list: user.stageList
+      list: user.stageList,
+	  typingList: user.typingErr
     });
   });
   // quest data load
   socket.on('init_quest', function(data) {
+	// start time
+	startTime = new Date().getTime();
     var path = "./public/question/" + data + ".txt";
 
     var question = fs.readFileSync(path, 'utf-8');
     socket.emit('get_quest', question);
+  });
+
+  // hint data load
+  socket.on('init_hint', function(data) {
+	var path = "./public/hint/" + data + ".html";
+	
+	var hint = fs.readFileSync(path, 'utf-8');
+	socket.emit('get_hint', hint);
+  });
+
+  // basic code load
+  socket.on('init_code', function(data) {
+	if (data == "stage") {
+		socket.emit('get_code', "");
+		return;
+	}
+	else if(data == "title") {
+		data = "basic";
+	}
+	var path = "./public/code/" + data + ".c";
+
+	var code = fs.readFileSync(path, 'utf-8');
+	socket.emit('get_code', code);
   });
 
   // user data update
@@ -114,6 +173,22 @@ io.on('connection', function(socket) {
       }
     });
   });
+
+  socket.on('err_update', function(data) {
+	console.log(data.list);
+	var query = "UPDATE typing_err SET stage1=?, stage2=?, stage3=?, stage4=?, stage5=?, stage6=? WHERE name=?";
+	var params = [data.list[0], data.list[1], data.list[2], data.list[3], data.list[4], data.list[5], data.name];
+
+	db.query(query, params, function(err, result, fields) {
+		if(err) {
+		  console.log(err);
+		}
+		else {
+		  console.log(result);
+		}
+	});
+  });
+
   // login
   socket.on('signin', function(data) {
 
@@ -160,6 +235,15 @@ io.on('connection', function(socket) {
       }
     });
 
+	query = "SELECT * FROM typing_err WHERE `name`=?";
+	
+	db.query(query, params, function(err, result, fields) {
+		if(!err) {
+			var typingErrList = [result[0].stage1, result[0].stage2, result[0].stage3, result[0].stage4, result[0].stage5, result[0].stage6];
+			user.setTypingErr(typingErrList);
+		}
+	});
+
   });
 
   // sign up
@@ -193,6 +277,15 @@ io.on('connection', function(socket) {
         console.log(err);
       }
     });
+
+	query = "INSERT INTO typing_err VALUES(?,?,?,?,?,?,?);";
+	params = [id, 0, 0, 0, 0, 0, 0,];
+
+	db.query(query, params, function(err, result, fields) {
+		if(!err) {
+			console.log(err);
+		}
+	});
 
   });
 

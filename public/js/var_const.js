@@ -104,6 +104,11 @@
       info[i].setText(value[i]);
     }
 
+	var resultBk = game.add.graphics(game.world.centerX - 200, game.world.centerY - 150);
+	resultBk.beginFill(0x999999, 1);
+	//resultBk.anchor.set(0.5, 0.5);
+	resultBk.drawRoundedRect(0, 0, 400, 300, 20);
+
     var resultMsg = game.add.text(game.world.centerX, 150, "success", {
       font: "bold 40px Arial",
       fill: "#ffffff"
@@ -120,6 +125,7 @@
     user.stageList[0] = user.stageList[0] + 1;
     user.selectStage = 0;
     load.updateData();
+	load.updateErr();
     load.setInit();
     game.state.start('Stage');
   }

@@ -93,6 +93,7 @@ function onClickSuccessArr() {
 	user.selectStage = 0;
 	user.stageList[5] += 1;
 	load.updateData();
+	load.updateErr();
 	load.setInit();
 	game.state.start('Stage');
 }

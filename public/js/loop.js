@@ -78,6 +78,7 @@ function onClickLoop() {
 	user.selectStage = 0;
 	user.stageList[3] += 1;
 	load.updateData();
+	load.updateErr();
 	load.setInit();
 	game.state.start('Stage');
 }

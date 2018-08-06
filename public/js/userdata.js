@@ -3,6 +3,7 @@ function UserData() {
 	this.title = 0;
 	this.stageList = [];
 	this.selectStage = 0;
+	this.typingErr = [];
 }
 
 UserData.prototype.setInit = function(name, title, stageList) {
@@ -20,6 +21,10 @@ UserData.prototype.setTitle = function(title) {
 
 UserData.prototype.setStageList = function(stageNo, val) {
 	this.stageList[stageNo] = val;
+};
+
+UserData.prototype.setTypingErr = function(typingErr) {
+	this.typingErr = typingErr;
 };
 
 var user = new UserData();

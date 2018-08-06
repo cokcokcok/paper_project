@@ -1,5 +1,4 @@
-<h3>attack 함수와 spawn함수를 만들어보자</h3>
-<h5>attack() : unit의 상태가 적과 접촉했을때에 attack를 출력하는 함수를 만드시오</h5>
+<h3>spawn함수를 만들어보자</h3>
 <h5>spawn() : 반복문을 활용해 unit를 5번 출력하는 함수를 만드시오</h5>
 <hr>
 
