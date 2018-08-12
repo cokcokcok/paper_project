@@ -1,10 +1,12 @@
 demo.fun = function() {};
 
 var funUnit;
+var funUnitList = Array();
 var funEnemy;
 var funMovement = true;
 var tunPos = false;
 var funCompileCheck = false;
+
 demo.fun.prototype = {
   preload: function() {
     game.load.image('titleBk0', "images/all/plx-1.png");
@@ -16,8 +18,8 @@ demo.fun.prototype = {
     game.load.image('basecamp', "images/play/basecamp.png");
     game.load.image('successBtn', "images/all/successBtn.png");
     game.load.spritesheet('unit_club', "images/play/unit_club_sprite.png", 90, 90, 9);
-    game.load.spritesheet('enemy_club', "images/play/enemy_club_sprite.png", 81, 90, 9);
   },
+
   create: function() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -34,72 +36,51 @@ demo.fun.prototype = {
     var basecamp = game.add.sprite(0, gameHeight - 32, 'basecamp');
     basecamp.anchor.set(0.48, 1);
 
-    funUnit = game.add.sprite(50, gameHeight - 25, 'unit_club', 1);
-    funUnit.scale.set(1);
-    funUnit.anchor.set(0, 1);
-    funUnit.animations.add('walk', [0, 1, 2, 3]);
-    funUnit.animations.add('attack', [4, 5, 6, 7, 8]);
-
-
-    funEnemy = game.add.sprite(gameWidth - 100, gameHeight - 25, 'enemy_club', 1);
-    funEnemy.scale.set(1);
-    funEnemy.anchor.set(0, 1);
-    funEnemy.animations.add('walk', [0, 1, 2, 3]);
-
-
-    game.physics.enable(funUnit, Phaser.Physics.ARCADE);
-    game.physics.enable(funEnemy, Phaser.Physics.ARCADE);
+    // funUnit = game.add.sprite(50, gameHeight - 25, 'unit_club', 1);
+    // funUnit.scale.set(1);
+    // funUnit.anchor.set(0, 1);
+    // funUnit.animations.add('walk', [0, 1, 2, 3]);
+    // funUnit.animations.add('attack', [4, 5, 6, 7, 8]);
 
   },
   update: function() {
-    if (game.physics.arcade.overlap(funUnit, funEnemy)) {
-      if (!tunPos) {
-        for (var i = 0; i < 20; i++) {
-          funUnit.x += 1.2;
-        }
-        tunPos = true;
+    if (funCompileCheck) {
+      for(var i = 0; i < 5; i++) {
+        funUnitList[i].x += 1.2;
       }
-      funUnit.animations.stop('walk', null, true);
-      funUnit.animations.play('attack', 6, true);
-      funEnemy.animations.stop('walk', null, true);
-      if (funUnit.animations.currentFrame.index === 6) {
-        funEnemy.kill();
-        funCompileCheck = false;
-        funUnit.animations.stop('attack', null, true);
+      if (funUnitList[0].x >= gameWidth) {
         setResultMsg_fun();
-      }
-    } else {
-      if(funCompileCheck) {
-        funUnit.x += 1.2;
-        funEnemy.x -= 1.2;
-
       }
     }
   }
 };
 
 function funCompile(data) {
-  var value = data.split(",");
 
-  if(!isSuccessCheck_fun(value)) {
-	return;
+  var value = data.split(",");
+  value.pop();
+
+  if (!isSuccessCheck_fun(value)) {
+    alert("깂을 확인해 주세요");
+    return;
   }
-  funEnemy.animations.play('walk', 5, true);
-  funUnit.animations.play('walk', 5, true);
+
+  for (var i = 0; i < 5; i++) {
+		funUnitList[i] = game.add.sprite((50 * i), (gameHeight - 25), 'unit_club', 1);
+		funUnitList[i].scale.set(1);
+		funUnitList[i].anchor.set(0, 1);
+		funUnitList[i].animations.add('walk', [0,1,2,3]);
+		funUnitList[i].play('walk', 5, true);
+	}
+
   funCompileCheck = true;
 }
 
 function isSuccessCheck_fun(data) {
-  if (data[0] == "attack" || data[5] == "attack") {
-	if (data[0] == "unit" || data[1] == "unit") {
-		return true;
-	}
-	else {
-		return false;
-	}
-  }
-  else {
-	return false;
+  if (data[0] == "unit" && data.length == 5) {
+    return true;
+  } else {
+    return false;
   }
 }
 

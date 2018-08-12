@@ -54,7 +54,7 @@ UserData.prototype.setStage = function(stageNo, val) {
 };
 
 UserData.prototype.setTypingErr = function(typingErr) {
-	this.typingErr = typingErr;
+  this.typingErr = typingErr;
 };
 
 var user = new UserData();
@@ -75,31 +75,30 @@ io.on('connection', function(socket) {
   console.log("connect server");
   // source code cmpile
   socket.on('compile', function(data) {
-	// end time
-	endTime = new Date().getTime();
-	
-	var writeTime = endTime - startTime;
+    // end time
+    endTime = new Date().getTime();
+
+    var writeTime = endTime - startTime;
     var code = data.code;
     var envData = {
       OS: "linux",
       cmd: "gcc"
     };
-	var fileName = user.name + "_" +  String(user.selectStage) + "_" + cuid.slug();
-    
-	var query = "INSERT INTO write_time VALUES(?,?,?);";
-	var params = [user.name, fileName, writeTime];
-	
-	db.query(query, params, function(err, result, fields) {
-		if(err) {
-			console.log(err);
-		}
-		else {
-			console.log(result);
-		}
-	});
+    var fileName =user.name + "/" +  user.name + "_" + String(user.selectStage) + "_" + cuid.slug();
 
-	// cpp file compile
-    compiler.compileCPP(envData, code, fileName,  function(result) {
+    var query = "INSERT INTO write_time VALUES(?,?,?);";
+    var params = [user.name, fileName, writeTime];
+
+    db.query(query, params, function(err, result, fields) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(result);
+      }
+    });
+
+    // cpp file compile
+    compiler.compileCPP(envData, code, fileName, function(result) {
       if (result.error) {
         // send error message
         socket.emit('compile_error', result.error);
@@ -113,7 +112,7 @@ io.on('connection', function(socket) {
   });
 
   socket.on('update_selectStage', function(data) {
-	user.selectStage = data;
+    user.selectStage = data;
   });
 
   // join_main
@@ -123,14 +122,14 @@ io.on('connection', function(socket) {
       name: user.name,
       title: user.title,
       list: user.stageList,
-	  typingList: user.typingErr
+      typingList: user.typingErr
     });
   });
   // quest data load
   socket.on('init_quest', function(data) {
-	// start time
-	startTime = new Date().getTime();
-    var path = "./public/question/" + data + ".txt";
+    // start time
+    startTime = new Date().getTime();
+    var path = "./public/question/" + data + ".html";
 
     var question = fs.readFileSync(path, 'utf-8');
     socket.emit('get_quest', question);
@@ -138,25 +137,24 @@ io.on('connection', function(socket) {
 
   // hint data load
   socket.on('init_hint', function(data) {
-	var path = "./public/hint/" + data + ".html";
-	
-	var hint = fs.readFileSync(path, 'utf-8');
-	socket.emit('get_hint', hint);
+    var path = "./public/hint/" + data + ".html";
+
+    var hint = fs.readFileSync(path, 'utf-8');
+    socket.emit('get_hint', hint);
   });
 
   // basic code load
   socket.on('init_code', function(data) {
-	if (data == "stage") {
-		socket.emit('get_code', "");
-		return;
-	}
-	else if(data == "title") {
-		data = "basic";
-	}
-	var path = "./public/code/" + data + ".c";
+    if (data == "stage") {
+      socket.emit('get_code', "");
+      return;
+    } else if (data == "title") {
+      data = "basic";
+    }
+    var path = "./public/code/" + data + ".c";
 
-	var code = fs.readFileSync(path, 'utf-8');
-	socket.emit('get_code', code);
+    var code = fs.readFileSync(path, 'utf-8');
+    socket.emit('get_code', code);
   });
 
   // user data update
@@ -175,18 +173,17 @@ io.on('connection', function(socket) {
   });
 
   socket.on('err_update', function(data) {
-	console.log(data.list);
-	var query = "UPDATE typing_err SET stage1=?, stage2=?, stage3=?, stage4=?, stage5=?, stage6=? WHERE name=?";
-	var params = [data.list[0], data.list[1], data.list[2], data.list[3], data.list[4], data.list[5], data.name];
+    console.log(data.list);
+    var query = "UPDATE typing_err SET stage1=?, stage2=?, stage3=?, stage4=?, stage5=?, stage6=? WHERE name=?";
+    var params = [data.list[0], data.list[1], data.list[2], data.list[3], data.list[4], data.list[5], data.name];
 
-	db.query(query, params, function(err, result, fields) {
-		if(err) {
-		  console.log(err);
-		}
-		else {
-		  console.log(result);
-		}
-	});
+    db.query(query, params, function(err, result, fields) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(result);
+      }
+    });
   });
 
   // login
@@ -218,8 +215,8 @@ io.on('connection', function(socket) {
         //send client
         socket.emit('check_signin', {
           msg: "username does not exist"
-
         });
+        return;
       } else {
         if (pw == result[0].user_pw) {
           var stageList = [result[0].stage1, result[0].stage2, result[0].stage3, result[0].stage4, result[0].stage5, result[0].stage6];
@@ -235,14 +232,14 @@ io.on('connection', function(socket) {
       }
     });
 
-	query = "SELECT * FROM typing_err WHERE `name`=?";
-	
-	db.query(query, params, function(err, result, fields) {
-		if(!err) {
-			var typingErrList = [result[0].stage1, result[0].stage2, result[0].stage3, result[0].stage4, result[0].stage5, result[0].stage6];
-			user.setTypingErr(typingErrList);
-		}
-	});
+    query = "SELECT * FROM typing_err WHERE `name`=?";
+
+    db.query(query, params, function(err, result, fields) {
+      if (!err) {
+        var typingErrList = [result[0].stage1, result[0].stage2, result[0].stage3, result[0].stage4, result[0].stage5, result[0].stage6];
+        user.setTypingErr(typingErrList);
+      }
+    });
 
   });
 
@@ -278,14 +275,26 @@ io.on('connection', function(socket) {
       }
     });
 
-	query = "INSERT INTO typing_err VALUES(?,?,?,?,?,?,?);";
-	params = [id, 0, 0, 0, 0, 0, 0,];
+    query = "INSERT INTO typing_err VALUES(?,?,?,?,?,?,?);";
+    params = [id, 0, 0, 0, 0, 0, 0, ];
 
-	db.query(query, params, function(err, result, fields) {
-		if(!err) {
-			console.log(err);
-		}
-	});
+    db.query(query, params, function(err, result, fields) {
+      if (!err) {
+        console.log(err);
+      }
+    });
+
+    fs.exists( './temp/' + id , function(exists){
+    	    if(!exists)
+    	    {
+    	        if(exports.stats)
+    	        {
+    	        	console.log('INFO: '.cyan + 'temp directory created for storing temporary files.'.cyan )
+    	        }
+    	    	fs.mkdirSync('./temp/' + id);
+    	    }
+    });
+
 
   });
 
@@ -296,6 +305,8 @@ io.on('connection', function(socket) {
   socket.on('disconnect', function() {
     console.log('user disconnected');
   });
+
+
 });
 
 server.listen(port, () => {

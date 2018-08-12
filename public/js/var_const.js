@@ -100,14 +100,20 @@
   function ChangeInfo(output) {
     var value = output.split(',');
 
-    for (var i = 0; i < 4; i++) {
-      info[i].setText(value[i]);
+    if(!isSuccessCheck_var(value)) {
+      alert("모든 값이 변경되지 않았습니다.")
+      return;
     }
 
-	var resultBk = game.add.graphics(game.world.centerX - 200, game.world.centerY - 150);
-	resultBk.beginFill(0x999999, 1);
-	//resultBk.anchor.set(0.5, 0.5);
-	resultBk.drawRoundedRect(0, 0, 400, 300, 20);
+    for (var i = 0; i < 3; i++) {
+      info[i + 1].setText(value[i]);
+    }
+
+    var resultBk = game.add.graphics(game.world.centerX - 200, game.world.centerY - 150);
+    resultBk.beginFill(0x999999, 1);
+    //resultBk.anchor.set(0.5, 0.5);
+    resultBk.alpha = 0.5;
+    resultBk.drawRoundedRect(0, 0, 400, 300, 20);
 
     var resultMsg = game.add.text(game.world.centerX, 150, "success", {
       font: "bold 40px Arial",
@@ -118,14 +124,23 @@
 
     var successBtn = game.add.button(game.world.centerX, game.world.centerY + 50, 'successBtn', onClickSuccess_var, this, 2, 1, 0);
 
-    successBtn.anchor.set(0.5,0.5);
+    successBtn.anchor.set(0.5, 0.5);
+  }
+
+  function isSuccessCheck_var(data) {
+    if (data[1] == "100" || data[2] == "8", data[3] == "2") {
+      return false;
+    }
+    else {
+      return true;
+    }
   }
 
   function onClickSuccess_var() {
     user.stageList[0] = user.stageList[0] + 1;
     user.selectStage = 0;
     load.updateData();
-	load.updateErr();
+    load.updateErr();
     load.setInit();
     game.state.start('Stage');
   }

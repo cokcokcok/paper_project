@@ -65,6 +65,9 @@
             var editor = ace.edit("editor");
             editor.setTheme("ace/theme/monokai");
             editor.session.setMode("ace/mode/c_cpp");
+            editor.setOptions({
+              fontSize: "13pt"
+            });
           </script>
         </div>
         <!-- hint view -->
@@ -72,7 +75,7 @@
           <div class="row" style="height:45px; background:#9f9f9f; padding:1%;">
             <big style="font-size:13pt; color:white;">힌 트</big>
           </div>
-		  <div id="hint_content" style="overflow-y:auto; overflow-x:hidden; height:355px;"></div>
+          <div id="hint_content" style="overflow-y:auto; overflow-x:hidden; height:355px;"></div>
         </div>
       </div>
       <!-- line & copyright -->
@@ -98,7 +101,7 @@
       user.name = data.name;
       user.title = data.title;
       user.stageList = data.list;
-	  user.typingErr = data.typingList;
+      user.typingErr = data.typingList;
       setMode();
       load.setInit();
     });
@@ -124,11 +127,10 @@
             funCompile(data);
             break;
           case 6:
-			arrCompile(data);
+            arrCompile(data);
             break;
         }
       }
-      //editor.getSession().setValue("#include");
     });
 
     socket.on("compile_error", function(data) {
@@ -143,18 +145,18 @@
         code: $code
       });
     });
-	
-	$(".ace_text-input").on('keydown', function(event) {
-		if(event.keyCode == 46 || event.keyCode == 8) {
-			user.typingErr[user.selectStage - 1] += 1;
-		}
-	});
+
+    $(".ace_text-input").on('keydown', function(event) {
+      if (event.keyCode == 46 || event.keyCode == 8) {
+        user.typingErr[user.selectStage - 1] += 1;
+      }
+    });
 
     function Load() {}
 
     Load.prototype.setInit = function() {
       $("#quest_content").empty();
-	  $("#hint_content").empty();
+      $("#hint_content").empty();
       var sendMsg = '';
       if (user.title == 0) {
         sendMsg = 'title';
@@ -184,19 +186,19 @@
         }
       }
       socket.emit('init_quest', sendMsg);
-	  socket.emit('init_code', sendMsg);
-	  socket.emit('init_hint', sendMsg);
-	  socket.emit('update_selectStage', user.selectStage);
+      socket.emit('init_code', sendMsg);
+      socket.emit('init_hint', sendMsg);
+      socket.emit('update_selectStage', user.selectStage);
     }
     socket.on("get_quest", function(data) {
       $("#quest_content").append(data);
     });
-	socket.on("get_hint", function(data) {
-	  $("#hint_content").append(data);
-	});
-	socket.on("get_code", function(data) {
-	  editor.getSession().setValue(data);
-	});
+    socket.on("get_hint", function(data) {
+      $("#hint_content").append(data);
+    });
+    socket.on("get_code", function(data) {
+      editor.getSession().setValue(data);
+    });
 
     Load.prototype.updateData = function() {
       socket.emit('data_update', {
@@ -205,13 +207,13 @@
         list: user.stageList
       });
     };
-	
-	Load.prototype.updateErr = function() {
-	  socket.emit('err_update', {
-		name: user.name,
-		list: user.typingErr
-	  });
-	};
+
+    Load.prototype.updateErr = function() {
+      socket.emit('err_update', {
+        name: user.name,
+        list: user.typingErr
+      });
+    };
 
     var load = new Load();
   </script>
