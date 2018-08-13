@@ -94,7 +94,7 @@
   <script src="/socket.io/socket.io.js"></script>
   <script>
     var socket = io();
-
+	var startTime;
     socket.emit('join_main');
 
     socket.on('init_user', function(data) {
@@ -105,6 +105,10 @@
       setMode();
       load.setInit();
     });
+
+	socket.on('update_title', function(data) {
+		user.title = data;
+	});
 
     socket.on("compile_success", function(data) {
       if (user.title == 0) {
@@ -140,9 +144,12 @@
     $("#send_code").click(e => {
       e.preventDefault();
       var $code = editor.getSession().getValue();
-
+	  var endTime = new Date().getTime() - startTime;
       socket.emit('compile', {
-        code: $code
+        code: $code,
+		name: user.name,
+		selectStage: user.selectStage,
+		time: endTime
       });
     });
 
@@ -189,6 +196,7 @@
       socket.emit('init_code', sendMsg);
       socket.emit('init_hint', sendMsg);
       socket.emit('update_selectStage', user.selectStage);
+	  startTime = new Date().getTime();
     }
     socket.on("get_quest", function(data) {
       $("#quest_content").append(data);
@@ -204,7 +212,7 @@
       socket.emit('data_update', {
         name: user.name,
         title: user.title,
-        list: user.stageList
+        list: user.stageList,
       });
     };
 

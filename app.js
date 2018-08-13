@@ -75,19 +75,16 @@ io.on('connection', function(socket) {
   console.log("connect server");
   // source code cmpile
   socket.on('compile', function(data) {
-    // end time
-    endTime = new Date().getTime();
 
-    var writeTime = endTime - startTime;
     var code = data.code;
     var envData = {
       OS: "linux",
       cmd: "gcc"
     };
-    var fileName =user.name + "/" +  user.name + "_" + String(user.selectStage) + "_" + cuid.slug();
+    var fileName =data.name + "/" +  data.name + "_" + String(data.selectStage) + "_" + cuid.slug();
 
     var query = "INSERT INTO write_time VALUES(?,?,?);";
-    var params = [user.name, fileName, writeTime];
+    var params = [data.name, fileName, data.time];
 
     db.query(query, params, function(err, result, fields) {
       if (err) {
@@ -127,8 +124,7 @@ io.on('connection', function(socket) {
   });
   // quest data load
   socket.on('init_quest', function(data) {
-    // start time
-    startTime = new Date().getTime();
+    
     var path = "./public/question/" + data + ".html";
 
     var question = fs.readFileSync(path, 'utf-8');
@@ -170,6 +166,9 @@ io.on('connection', function(socket) {
         console.log(result);
       }
     });
+	user.title = data.title;
+	socket.emit('update_title', data.title);
+
   });
 
   socket.on('err_update', function(data) {
